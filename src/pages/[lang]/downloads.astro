@@ -83,6 +83,7 @@ const releases = await getReleases();
             body={release.body}
             assets={release.assets}
             locale={locale === 'es' ? 'es-ES' : 'en-US'}
+            showReleaseNotesText={dictionary.downloads.showReleaseNotes}
             noReleaseNotesText={dictionary.downloads.noReleaseNotes}
             noAssetsText={dictionary.downloads.noAssets}
           />

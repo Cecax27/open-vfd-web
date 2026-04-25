@@ -68,6 +68,7 @@ const en = {
     emptyTitle: 'No releases available right now.',
     emptyDescription:
       'GitHub did not return releases during build. Check the repository releases page for the latest artifacts.',
+    showReleaseNotes: 'Show release notes',
     noReleaseNotes: 'No release notes available for this version yet.',
     noAssets: 'No downloadable assets were attached to this release.'
   },

@@ -68,6 +68,7 @@ const es = {
     emptyTitle: 'No hay releases disponibles en este momento.',
     emptyDescription:
       'GitHub no devolvió releases durante el build. Revisa la página de releases del repositorio para obtener los artefactos más recientes.',
+    showReleaseNotes: 'Mostrar notas de release',
     noReleaseNotes: 'No hay notas de release disponibles para esta versión.',
     noAssets: 'No se adjuntaron archivos descargables a esta release.'
   },

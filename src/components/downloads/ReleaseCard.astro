@@ -1,5 +1,7 @@
 ---
 import DownloadAsset from './DownloadAsset.astro';
+import { marked } from 'marked';
+import IconDownload from '../icons/IconDownload.astro';
 
 interface ReleaseAsset {
   name: string;
@@ -14,43 +16,126 @@ interface Props {
   body: string;
   assets: ReleaseAsset[];
   locale: string;
+  showReleaseNotesText: string;
   noReleaseNotesText: string;
   noAssetsText: string;
 }
 
-const { tag, name, publishedAt, body, assets, locale, noReleaseNotesText, noAssetsText } = Astro.props;
+const {
+  tag,
+  name,
+  publishedAt,
+  body,
+  assets,
+  locale,
+  showReleaseNotesText,
+  noReleaseNotesText,
+  noAssetsText
+} = Astro.props;
 
 const publishedDate = new Intl.DateTimeFormat(locale, {
   year: 'numeric',
   month: 'short',
   day: '2-digit'
 }).format(new Date(publishedAt));
+
+const releaseNotesMarkdown = body?.trim() || noReleaseNotesText;
+const releaseNotesHtml = marked.parse(releaseNotesMarkdown, {
+  breaks: true,
+  gfm: true
+});
+
+const linuxAsset = assets.find((asset) => asset.name.toLowerCase().endsWith('.appimage'));
+const windowsAsset = assets.find((asset) => asset.name.toLowerCase().endsWith('.exe'));
+const linuxLabel = 'Linux';
+const windowsLabel = 'Windows';
 ---
 
 <article class="surface release">
-  <div class="head">
-    <h3>{name || tag}</h3>
-    <p class="meta mono">{tag} • {publishedDate}</p>
-  </div>
+  <details>
+    <summary>
+      <div class="head">
+        <h3>{name || tag}</h3>
+        <p class="meta mono">{tag} • {publishedDate}</p>
+      </div>
+      <p class="state mono">{showReleaseNotesText}</p>
+    </summary>
 
-  <p class="notes">{body?.trim() || noReleaseNotesText}</p>
+    <div class="content">
+      <div class="notes" set:html={releaseNotesHtml} />
 
-  {assets.length > 0 ? (
-    <div class="assets">
-      {assets.map((asset) => (
-        <DownloadAsset name={asset.name} size={asset.size} downloadUrl={asset.browser_download_url} />
-      ))}
+      {assets.length > 0 ? (
+        <div class="assets">
+          {assets.map((asset) => (
+            <DownloadAsset name={asset.name} size={asset.size} downloadUrl={asset.browser_download_url} />
+          ))}
+        </div>
+      ) : (
+        <p class="muted">{noAssetsText}</p>
+      )}
     </div>
-  ) : (
-    <p class="muted">{noAssetsText}</p>
+  </details>
+
+  {(linuxAsset || windowsAsset) && (
+    <div class="quick-downloads">
+      {linuxAsset && (
+        <a class="button button-secondary" href={linuxAsset.browser_download_url} target="_blank" rel="noreferrer">
+          <IconDownload />
+          {linuxLabel}
+        </a>
+      )}
+
+      {windowsAsset && (
+        <a class="button button-secondary" href={windowsAsset.browser_download_url} target="_blank" rel="noreferrer">
+          <IconDownload />
+          {windowsLabel}
+        </a>
+      )}
+    </div>
   )}
 </article>
 
 <style>
   .release {
     padding: 1.4rem;
+    min-width: 0;
+    overflow: hidden;
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  details {
     display: grid;
     gap: 0.8rem;
+  }
+
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .state {
+    color: var(--accent-primary);
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  details[open] .state {
+    color: var(--text-secondary);
+  }
+
+  .content {
+    display: grid;
+    gap: 0.9rem;
+    min-width: 0;
   }
 
   .head {
@@ -69,12 +154,88 @@ const publishedDate = new Intl.DateTimeFormat(locale, {
 
   .notes {
     color: var(--text-secondary);
-    white-space: pre-line;
     overflow-wrap: anywhere;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .notes :global(*) {
+    max-width: 100%;
+  }
+
+  .notes :global(p),
+  .notes :global(li) {
+    color: var(--text-secondary);
+  }
+
+  .notes :global(ul),
+  .notes :global(ol) {
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .notes :global(code) {
+    background: rgba(58, 134, 255, 0.18);
+    border-radius: 6px;
+    padding: 0.08rem 0.3rem;
+  }
+
+  .notes :global(pre) {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    overflow-x: auto;
+  }
+
+  .notes :global(pre code) {
+    background: transparent;
+    padding: 0;
+  }
+
+  .notes :global(img) {
+    width: auto;
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    border-radius: var(--radius-sm);
+    margin: 0.5rem 0;
+  }
+
+  .notes :global(picture),
+  .notes :global(figure),
+  .notes :global(a),
+  .notes :global(svg),
+  .notes :global(video),
+  .notes :global(canvas),
+  .notes :global(iframe) {
+    max-width: 100% !important;
+  }
+
+  .notes :global(figure) {
+    margin: 0.5rem 0;
+  }
+
+  .notes :global(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
   }
 
   .assets {
     display: grid;
     gap: 0.55rem;
+  }
+
+  .quick-downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .quick-downloads .button {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.85rem;
   }
 </style>
