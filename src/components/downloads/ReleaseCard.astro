@@ -13,11 +13,14 @@ interface Props {
   publishedAt: string;
   body: string;
   assets: ReleaseAsset[];
+  locale: string;
+  noReleaseNotesText: string;
+  noAssetsText: string;
 }
 
-const { tag, name, publishedAt, body, assets } = Astro.props;
+const { tag, name, publishedAt, body, assets, locale, noReleaseNotesText, noAssetsText } = Astro.props;
 
-const publishedDate = new Intl.DateTimeFormat('en-US', {
+const publishedDate = new Intl.DateTimeFormat(locale, {
   year: 'numeric',
   month: 'short',
   day: '2-digit'
@@ -30,7 +33,7 @@ const publishedDate = new Intl.DateTimeFormat('en-US', {
     <p class="meta mono">{tag} • {publishedDate}</p>
   </div>
 
-  <p class="notes">{body?.trim() || 'No release notes available for this version yet.'}</p>
+  <p class="notes">{body?.trim() || noReleaseNotesText}</p>
 
   {assets.length > 0 ? (
     <div class="assets">
@@ -39,7 +42,7 @@ const publishedDate = new Intl.DateTimeFormat('en-US', {
       ))}
     </div>
   ) : (
-    <p class="muted">No downloadable assets were attached to this release.</p>
+    <p class="muted">{noAssetsText}</p>
   )}
 </article>
 

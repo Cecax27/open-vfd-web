@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { href, label, currentPath } = Astro.props;
-const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+const isActive = currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
 <a class:list={['nav-link', { active: isActive }]} href={href} aria-current={isActive ? 'page' : undefined}>

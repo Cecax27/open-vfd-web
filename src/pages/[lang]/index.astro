@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/home/Hero.astro';
+import FeaturesSection from '../../components/home/FeaturesSection.astro';
+import DiscordBanner from '../../components/shared/DiscordBanner.astro';
+import { getDictionary, isLocale, locales, type Locale } from '../../locales';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+
+if (!lang || !isLocale(lang)) {
+  return Astro.redirect('/en');
+}
+
+const locale: Locale = lang;
+const dictionary = getDictionary(locale);
+---
+
+<BaseLayout title={dictionary.home.title} description={dictionary.home.description} locale={locale}>
+  <Hero
+    kicker={dictionary.home.hero.kicker}
+    title={dictionary.home.hero.title}
+    summary={dictionary.home.hero.summary}
+    primaryCtaLabel={dictionary.home.hero.primaryCta}
+    primaryCtaHref={`/${locale}/downloads`}
+    secondaryCtaLabel={dictionary.home.hero.secondaryCta}
+    secondaryCtaHref={`/${locale}/docs`}
+  />
+
+  <FeaturesSection
+    kicker={dictionary.home.features.kicker}
+    title={dictionary.home.features.title}
+    description={dictionary.home.features.description}
+    items={dictionary.home.features.items}
+  />
+
+  <DiscordBanner
+    kicker={dictionary.discordBanner.kicker}
+    title={dictionary.discordBanner.title}
+    buttonLabel={dictionary.discordBanner.button}
+  />
+</BaseLayout>

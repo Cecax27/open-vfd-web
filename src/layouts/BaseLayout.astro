@@ -2,17 +2,25 @@
 import Header from '../components/nav/Header.astro';
 import Footer from '../components/footer/Footer.astro';
 import '../styles/global.css';
+import { getDictionary, type Locale } from '../locales';
 
 interface Props {
   title: string;
   description?: string;
+  locale?: Locale;
 }
 
-const { title, description = 'OpenVFD is an open source VFD and motor simulation platform with OPC UA integration.' } = Astro.props;
+const {
+  title,
+  description = 'OpenVFD is an open source VFD and motor simulation platform with OPC UA integration.',
+  locale = 'en'
+} = Astro.props;
+
 const currentPath = Astro.url.pathname;
+const dictionary = getDictionary(locale);
 ---
 
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -22,10 +30,10 @@ const currentPath = Astro.url.pathname;
     <title>{title}</title>
   </head>
   <body>
-    <Header currentPath={currentPath} />
+    <Header currentPath={currentPath} locale={locale} dictionary={dictionary} />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} dictionary={dictionary} />
   </body>
 </html>

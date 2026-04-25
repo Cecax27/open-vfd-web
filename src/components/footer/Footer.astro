@@ -1,10 +1,21 @@
+---
+import { getDictionary, type Locale, type LocaleDictionary } from '../../locales';
+
+interface Props {
+  locale?: Locale;
+  dictionary?: LocaleDictionary;
+}
+
+const { locale = 'en', dictionary = getDictionary(locale) } = Astro.props;
+---
+
 <footer>
   <div class="shell">
-    <p>OpenVFD is open source software for VFD and motor simulation.</p>
+    <p>{dictionary.footer.description}</p>
     <div class="links">
       <a href="https://github.com/Cecax27/open-vfd-simulator" target="_blank" rel="noreferrer">GitHub</a>
-      <a href="/docs">Documentation</a>
-      <a href="/collaborate">Collaborate</a>
+      <a href={`/${locale}/docs`}>{dictionary.footer.documentation}</a>
+      <a href={`/${locale}/collaborate`}>{dictionary.footer.collaborate}</a>
     </div>
   </div>
 </footer>

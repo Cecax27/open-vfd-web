@@ -1,13 +1,24 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  summary: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+}
+
+const { kicker, title, summary, primaryCtaLabel, primaryCtaHref, secondaryCtaLabel, secondaryCtaHref } = Astro.props;
+---
+
 <section class="hero">
-  <p class="mono hero-kicker">Open Source VFD Simulator</p>
-  <h1>Simulate motor dynamics and VFD behavior in one focused workspace.</h1>
-  <p class="summary">
-    OpenVFD is an open source software platform to simulate both the motor model and variable frequency drive basics,
-    with OPC UA support for control variables and simulation telemetry.
-  </p>
+  <p class="mono hero-kicker">{kicker}</p>
+  <h1>{title}</h1>
+  <p class="summary">{summary}</p>
   <div class="actions">
-    <a class="button button-primary" href="/downloads">Get Latest Build</a>
-    <a class="button button-secondary" href="/docs">Read Documentation</a>
+    <a class="button button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
+    <a class="button button-secondary" href={secondaryCtaHref}>{secondaryCtaLabel}</a>
   </div>
 </section>
 

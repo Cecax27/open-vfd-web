@@ -1,25 +1,23 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../../locales';
 
 interface Props {
   docs: CollectionEntry<'docs'>[];
   currentId?: string;
+  locale: Locale;
+  title: string;
+  categoryLabels: Record<string, string>;
+  articleTitles?: Record<string, string>;
 }
 
-const { docs, currentId } = Astro.props;
+const { docs, currentId, locale, title, categoryLabels, articleTitles = {} } = Astro.props;
 
-const labelMap: Record<string, string> = {
-  'getting-started': 'Getting Started',
-  simulation: 'Simulation',
-  'opc-ua': 'OPC UA',
-  reference: 'Reference'
-};
-
-const categories = Object.keys(labelMap);
+const categories = Object.keys(categoryLabels);
 ---
 
 <aside class="surface sidebar">
-  <p class="title mono">Documentation</p>
+  <p class="title mono">{title}</p>
 
   {categories.map((category) => {
     const entries = docs
@@ -28,16 +26,16 @@ const categories = Object.keys(labelMap);
 
     return (
       <section>
-        <h3>{labelMap[category]}</h3>
+        <h3>{categoryLabels[category]}</h3>
         <ul>
           {entries.map((entry) => (
             <li>
               <a
-                href={`/docs/${entry.id}`}
+                href={`/${locale}/docs/${entry.id}`}
                 class:list={{ active: currentId === entry.id }}
                 aria-current={currentId === entry.id ? 'page' : undefined}
               >
-                {entry.data.title}
+                {articleTitles[entry.id] || entry.data.title}
               </a>
             </li>
           ))}

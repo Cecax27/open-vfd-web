@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/shared/SectionHeading.astro';
+import ContributeCard from '../../components/collaborate/ContributeCard.astro';
+import DiscordBanner from '../../components/shared/DiscordBanner.astro';
+import { getDictionary, isLocale, locales, type Locale } from '../../locales';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+
+if (!lang || !isLocale(lang)) {
+  return Astro.redirect('/en/collaborate');
+}
+
+const locale: Locale = lang;
+const dictionary = getDictionary(locale);
+---
+
+<BaseLayout title={dictionary.collaborate.title} description={dictionary.collaborate.description} locale={locale}>
+  <section class="page-grid">
+    <SectionHeading
+      kicker={dictionary.collaborate.kicker}
+      title={dictionary.collaborate.heading}
+      description={dictionary.collaborate.summary}
+    />
+
+    <div class="grid">
+      {dictionary.collaborate.cards.map((card) => (
+        <ContributeCard {...card} />
+      ))}
+    </div>
+  </section>
+
+  <DiscordBanner
+    kicker={dictionary.discordBanner.kicker}
+    title={dictionary.discordBanner.title}
+    buttonLabel={dictionary.discordBanner.button}
+  />
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  @media (max-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

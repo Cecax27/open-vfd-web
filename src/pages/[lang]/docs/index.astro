@@ -1,0 +1,133 @@
+---
+import { getCollection } from 'astro:content';
+import DocsLayout from '../../../components/docs/DocsLayout.astro';
+import DocsCategoryCard from '../../../components/docs/DocsCategoryCard.astro';
+import { getDictionary, isLocale, locales, type Locale } from '../../../locales';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+
+if (!lang || !isLocale(lang)) {
+  return Astro.redirect('/en/docs');
+}
+
+const locale: Locale = lang;
+const dictionary = getDictionary(locale);
+const docs = await getCollection('docs');
+const orderedDocs = docs.sort((a, b) => a.data.order - b.data.order);
+const articleTranslations = dictionary.docs.articleTranslations;
+const articleTitles = Object.fromEntries(
+  Object.entries(articleTranslations).map(([id, translation]) => [id, translation.title])
+);
+
+const categoryKeys = ['getting-started', 'simulation', 'opc-ua', 'reference'] as const;
+
+const categoryFirstDocLinks: Record<(typeof categoryKeys)[number], string> = {
+  'getting-started': `/${locale}/docs/getting-started/01-introduction`,
+  simulation: `/${locale}/docs/simulation/01-motor-model`,
+  'opc-ua': `/${locale}/docs/opc-ua/01-overview`,
+  reference: `/${locale}/docs/reference/01-parameter-list`
+};
+---
+
+<DocsLayout
+  title={dictionary.docs.title}
+  description={dictionary.docs.description}
+  docs={orderedDocs}
+  locale={locale}
+  sidebarTitle={dictionary.docs.sidebarTitle}
+  categoryLabels={dictionary.docs.categories}
+  articleTitles={articleTitles}
+>
+  <section class="doc-home">
+    <h1>{dictionary.docs.pageTitle}</h1>
+    <p class="intro">{dictionary.docs.pageIntro}</p>
+
+    <div class="categories">
+      {categoryKeys.map((category) => (
+        <DocsCategoryCard
+          href={categoryFirstDocLinks[category]}
+          title={dictionary.docs.categories[category]}
+          description={dictionary.docs.categoryDescriptions[category]}
+          total={orderedDocs.filter((entry) => entry.data.category === category).length}
+        />
+      ))}
+    </div>
+
+    <section class="all-entries">
+      <h2>{dictionary.docs.allArticles}</h2>
+      <ul>
+        {orderedDocs.map((doc) => (
+          <li>
+            <a href={`/${locale}/docs/${doc.id}`}>{articleTranslations[doc.id]?.title || doc.data.title}</a>
+            <p>{articleTranslations[doc.id]?.description || doc.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </section>
+</DocsLayout>
+
+<style>
+  .doc-home {
+    display: grid;
+    gap: 1.3rem;
+  }
+
+  h1 {
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+  }
+
+  .intro {
+    color: var(--text-secondary);
+    max-width: 720px;
+  }
+
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .all-entries {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  ul {
+    list-style: none;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  li {
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-soft);
+    background: rgba(31, 36, 48, 0.4);
+  }
+
+  li a {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  li p {
+    margin-top: 0.22rem;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  @media (max-width: 740px) {
+    .categories {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

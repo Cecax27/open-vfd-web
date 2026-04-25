@@ -2,38 +2,26 @@
 import SectionHeading from '../shared/SectionHeading.astro';
 import FeatureCard from './FeatureCard.astro';
 
-const features = [
-  {
-    token: 'SIM-01',
-    title: 'Motor Model Control',
-    description: 'Simulate load profile, inertia, and response behavior to tune how the virtual motor behaves under changing conditions.'
-  },
-  {
-    token: 'DRV-02',
-    title: 'VFD Parameter Tuning',
-    description: 'Adjust base VFD parameters such as output frequency, acceleration ramp, and voltage references in a controlled environment.'
-  },
-  {
-    token: 'OPC-03',
-    title: 'OPC UA Integration',
-    description: 'Expose control variables through OPC UA and stream simulation telemetry to external SCADA and automation systems.'
-  },
-  {
-    token: 'OSS-04',
-    title: 'Open Source Workflow',
-    description: 'Collaborate with the community, propose improvements, and test industrial control ideas with transparent tooling.'
-  }
-];
+interface FeatureItem {
+  token: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  description: string;
+  items: FeatureItem[];
+}
+
+const { kicker, title, description, items } = Astro.props;
 ---
 
 <section class="section-space page-grid">
-  <SectionHeading
-    kicker="Core Capabilities"
-    title="Built for practical VFD and motor simulation workflows"
-    description="OpenVFD helps developers, students, and control engineers model behavior, test control loops, and exchange real-time variables over OPC UA."
-  />
+  <SectionHeading kicker={kicker} title={title} description={description} />
   <div class="grid">
-    {features.map((feature) => (
+    {items.map((feature) => (
       <FeatureCard {...feature} />
     ))}
   </div>

@@ -1,8 +1,18 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  buttonLabel: string;
+}
+
+const { kicker, title, buttonLabel } = Astro.props;
+---
+
 <section class="surface discord-banner section-space">
-  <p class="mono">Need support or want to share your setup?</p>
-  <h3>Join the OpenVFD Discord community.</h3>
+  <p class="mono">{kicker}</p>
+  <h3>{title}</h3>
   <a class="button button-primary" href="https://discord.gg/RScK4jEC7" target="_blank" rel="noreferrer">
-    Connect on Discord
+    {buttonLabel}
   </a>
 </section>
 
