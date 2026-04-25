@@ -1,4 +1,6 @@
 ---
+import IconDownload from '../icons/IconDownload.astro';
+
 interface Props {
   name: string;
   size: number;
@@ -21,7 +23,10 @@ const formatSize = (bytes: number) => {
 ---
 
 <a class="asset" href={downloadUrl} target="_blank" rel="noreferrer">
-  <span>{name}</span>
+  <span class="name">
+    <IconDownload />
+    {name}
+  </span>
   <span class="mono muted">{formatSize(size)}</span>
 </a>
 
@@ -36,6 +41,12 @@ const formatSize = (bytes: number) => {
     background: rgba(31, 36, 48, 0.42);
     transition: border-color 0.2s ease, background-color 0.2s ease;
     font-size: 0.92rem;
+  }
+
+  .name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
   }
 
   .asset:hover {

@@ -1,4 +1,7 @@
 ---
+import IconDownload from '../icons/IconDownload.astro';
+import IconBook from '../icons/IconBook.astro';
+
 interface Props {
   kicker: string;
   title: string;
@@ -17,8 +20,14 @@ const { kicker, title, summary, primaryCtaLabel, primaryCtaHref, secondaryCtaLab
   <h1>{title}</h1>
   <p class="summary">{summary}</p>
   <div class="actions">
-    <a class="button button-primary" href={primaryCtaHref}>{primaryCtaLabel}</a>
-    <a class="button button-secondary" href={secondaryCtaHref}>{secondaryCtaLabel}</a>
+    <a class="button button-primary" href={primaryCtaHref}>
+      <IconDownload />
+      {primaryCtaLabel}
+    </a>
+    <a class="button button-secondary" href={secondaryCtaHref}>
+      <IconBook />
+      {secondaryCtaLabel}
+    </a>
   </div>
 </section>
 

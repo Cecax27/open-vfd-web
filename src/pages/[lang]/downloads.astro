@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionHeading from '../../components/shared/SectionHeading.astro';
 import ReleaseCard from '../../components/downloads/ReleaseCard.astro';
 import DiscordBanner from '../../components/shared/DiscordBanner.astro';
+import IconGithub from '../../components/icons/IconGithub.astro';
 import { getDictionary, isLocale, locales, type Locale } from '../../locales';
 
 interface ReleaseAsset {
@@ -67,6 +68,7 @@ const releases = await getReleases();
 
     <div class="actions">
       <a class="button button-secondary" href="https://github.com/Cecax27/open-vfd-simulator/releases" target="_blank" rel="noreferrer">
+        <IconGithub />
         {dictionary.downloads.viewOnGithub}
       </a>
     </div>

@@ -1,4 +1,9 @@
 ---
+import IconGithub from '../icons/IconGithub.astro';
+import IconDiscord from '../icons/IconDiscord.astro';
+import IconHeart from '../icons/IconHeart.astro';
+import IconArrowRight from '../icons/IconArrowRight.astro';
+
 interface Props {
   title: string;
   description: string;
@@ -8,6 +13,24 @@ interface Props {
 }
 
 const { title, description, href, label, badge } = Astro.props;
+
+const getIconType = (url: string): 'github' | 'discord' | 'sponsors' | 'link' => {
+  if (url.includes('github.com/sponsors')) {
+    return 'sponsors';
+  }
+
+  if (url.includes('discord.gg')) {
+    return 'discord';
+  }
+
+  if (url.includes('github.com')) {
+    return 'github';
+  }
+
+  return 'link';
+};
+
+const iconType = getIconType(href);
 ---
 
 <article class="surface card">
@@ -16,7 +39,13 @@ const { title, description, href, label, badge } = Astro.props;
     {badge && <span class="badge mono">{badge}</span>}
   </div>
   <p>{description}</p>
-  <a class="button button-secondary" href={href} target="_blank" rel="noreferrer">{label}</a>
+  <a class="button button-secondary" href={href} target="_blank" rel="noreferrer">
+    {iconType === 'github' && <IconGithub />}
+    {iconType === 'discord' && <IconDiscord />}
+    {iconType === 'sponsors' && <IconHeart />}
+    {iconType === 'link' && <IconArrowRight />}
+    {label}
+  </a>
 </article>
 
 <style>

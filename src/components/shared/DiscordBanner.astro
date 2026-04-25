@@ -1,4 +1,6 @@
 ---
+import IconDiscord from '../icons/IconDiscord.astro';
+
 interface Props {
   kicker: string;
   title: string;
@@ -12,6 +14,7 @@ const { kicker, title, buttonLabel } = Astro.props;
   <p class="mono">{kicker}</p>
   <h3>{title}</h3>
   <a class="button button-primary" href="https://discord.gg/RScK4jEC7" target="_blank" rel="noreferrer">
+    <IconDiscord />
     {buttonLabel}
   </a>
 </section>

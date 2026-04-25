@@ -1,5 +1,6 @@
 ---
 import { getDictionary, type Locale, type LocaleDictionary } from '../../locales';
+import IconGithub from '../icons/IconGithub.astro';
 
 interface Props {
   locale?: Locale;
@@ -13,7 +14,10 @@ const { locale = 'en', dictionary = getDictionary(locale) } = Astro.props;
   <div class="shell">
     <p>{dictionary.footer.description}</p>
     <div class="links">
-      <a href="https://github.com/Cecax27/open-vfd-simulator" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://github.com/Cecax27/open-vfd-simulator" target="_blank" rel="noreferrer">
+        <IconGithub />
+        GitHub
+      </a>
       <a href={`/${locale}/docs`}>{dictionary.footer.documentation}</a>
       <a href={`/${locale}/collaborate`}>{dictionary.footer.collaborate}</a>
     </div>
@@ -45,6 +49,9 @@ const { locale = 'en', dictionary = getDictionary(locale) } = Astro.props;
   }
 
   .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--text-secondary);
     transition: color 0.2s ease;
   }

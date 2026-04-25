@@ -1,5 +1,6 @@
 ---
 import NavLink from './NavLink.astro';
+import IconDiscord from '../icons/IconDiscord.astro';
 import {
   getDictionary,
   replaceLocaleInPath,
@@ -34,6 +35,7 @@ const navItems = [
 
     <div class="actions">
       <a class="button button-primary" href="https://discord.gg/RScK4jEC7" target="_blank" rel="noreferrer">
+        <IconDiscord />
         {dictionary.nav.discord}
       </a>
       <div class="languages" aria-label={dictionary.languageSwitchLabel}>
