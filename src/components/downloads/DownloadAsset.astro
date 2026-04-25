@@ -1,0 +1,56 @@
+---
+import IconDownload from '../icons/IconDownload.astro';
+
+interface Props {
+  name: string;
+  size: number;
+  downloadUrl: string;
+}
+
+const { name, size, downloadUrl } = Astro.props;
+
+const formatSize = (bytes: number) => {
+  if (!bytes) {
+    return '0 B';
+  }
+
+  const units = ['B', 'KB', 'MB', 'GB'];
+  const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  const value = bytes / 1024 ** index;
+
+  return `${value.toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
+};
+---
+
+<a class="asset" href={downloadUrl} target="_blank" rel="noreferrer">
+  <span class="name">
+    <IconDownload />
+    {name}
+  </span>
+  <span class="mono muted">{formatSize(size)}</span>
+</a>
+
+<style>
+  .asset {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.72rem 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-soft);
+    background: rgba(31, 36, 48, 0.42);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    font-size: 0.92rem;
+  }
+
+  .name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .asset:hover {
+    border-color: var(--secondary);
+    background: rgba(58, 134, 255, 0.11);
+  }
+</style>

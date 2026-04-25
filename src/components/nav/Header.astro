@@ -1,0 +1,135 @@
+---
+import NavLink from './NavLink.astro';
+import IconDiscord from '../icons/IconDiscord.astro';
+import {
+  getDictionary,
+  replaceLocaleInPath,
+  locales,
+  type Locale,
+  type LocaleDictionary
+} from '../../locales';
+
+interface Props {
+  currentPath: string;
+  locale?: Locale;
+  dictionary?: LocaleDictionary;
+}
+
+const { currentPath, locale = 'en', dictionary = getDictionary(locale) } = Astro.props;
+const navItems = [
+  { href: `/${locale}`, label: dictionary.nav.home },
+  { href: `/${locale}/downloads`, label: dictionary.nav.downloads },
+  { href: `/${locale}/docs`, label: dictionary.nav.documentation },
+  { href: `/${locale}/collaborate`, label: dictionary.nav.collaborate }
+];
+---
+
+<header>
+  <div class="shell">
+    <a class="brand" href={`/${locale}`}>OpenVFD</a>
+    <nav>
+      {navItems.map((item) => (
+        <NavLink href={item.href} label={item.label} currentPath={currentPath} />
+      ))}
+    </nav>
+
+    <div class="actions">
+      <a class="button button-primary" href="https://discord.gg/RScK4jEC7" target="_blank" rel="noreferrer">
+        <IconDiscord />
+        {dictionary.nav.discord}
+      </a>
+      <div class="languages" aria-label={dictionary.languageSwitchLabel}>
+        {locales.map((languageCode) => (
+          <a
+            href={replaceLocaleInPath(currentPath, languageCode)}
+            class:list={['language-link', { active: locale === languageCode }]}
+            lang={languageCode}
+          >
+            {languageCode.toUpperCase()}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    background: rgba(15, 17, 21, 0.82);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .shell {
+    width: min(var(--content-width), 92vw);
+    margin: 0 auto;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .button {
+    white-space: nowrap;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .languages {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .language-link {
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 0.35rem 0.55rem;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+  }
+
+  .language-link.active {
+    border-color: rgba(0, 209, 178, 0.35);
+    color: var(--accent-primary);
+    background: var(--accent-soft);
+  }
+
+  @media (max-width: 900px) {
+    .shell {
+      grid-template-columns: 1fr;
+      justify-items: start;
+      gap: 0.8rem;
+    }
+
+    nav {
+      justify-content: flex-start;
+    }
+
+    .actions {
+      flex-wrap: wrap;
+    }
+  }
+</style>

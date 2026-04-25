@@ -1,0 +1,32 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+type DocEntry = CollectionEntry<'docs'>;
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+
+  return docs.map((doc) => ({
+    params: { slug: doc.id },
+    props: { doc, target: `/en/docs/${doc.id}` }
+  }));
+}
+
+const { target } = Astro.props as { doc: DocEntry; target: string };
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <p>
+      Redirecting to
+      <a href={target}>{target}</a>
+      ...
+    </p>
+  </body>
+</html>

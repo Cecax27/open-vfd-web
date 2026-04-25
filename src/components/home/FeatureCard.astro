@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  token: string;
+}
+
+const { title, description, token } = Astro.props;
+---
+
+<article class="surface card">
+  <p class="token mono">{token}</p>
+  <h3>{title}</h3>
+  <p>{description}</p>
+</article>
+
+<style>
+  .card {
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.55rem;
+    min-height: 180px;
+  }
+
+  .token {
+    color: var(--accent-primary);
+    font-size: 0.8rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+</style>

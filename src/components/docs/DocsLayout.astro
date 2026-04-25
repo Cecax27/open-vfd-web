@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DocsSidebar from './DocsSidebar.astro';
+import type { Locale } from '../../locales';
+
+interface Props {
+  title: string;
+  description: string;
+  docs: CollectionEntry<'docs'>[];
+  currentId?: string;
+  locale: Locale;
+  sidebarTitle: string;
+  categoryLabels: Record<string, string>;
+  articleTitles?: Record<string, string>;
+}
+
+const { title, description, docs, currentId, locale, sidebarTitle, categoryLabels, articleTitles } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} locale={locale}>
+  <div class="docs-grid">
+    <DocsSidebar
+      docs={docs}
+      currentId={currentId}
+      locale={locale}
+      title={sidebarTitle}
+      categoryLabels={categoryLabels}
+      articleTitles={articleTitles}
+    />
+    <section class="surface content">
+      <slot />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .docs-grid {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .content {
+    padding: clamp(1rem, 2.3vw, 2rem);
+    overflow: hidden;
+  }
+
+  @media (max-width: 940px) {
+    .docs-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import { getDictionary, type Locale, type LocaleDictionary } from '../../locales';
+import IconGithub from '../icons/IconGithub.astro';
+
+interface Props {
+  locale?: Locale;
+  dictionary?: LocaleDictionary;
+}
+
+const { locale = 'en', dictionary = getDictionary(locale) } = Astro.props;
+---
+
+<footer>
+  <div class="shell">
+    <p>{dictionary.footer.description}</p>
+    <div class="links">
+      <a href="https://github.com/Cecax27/open-vfd-simulator" target="_blank" rel="noreferrer">
+        <IconGithub />
+        GitHub
+      </a>
+      <a href={`/${locale}/docs`}>{dictionary.footer.documentation}</a>
+      <a href={`/${locale}/collaborate`}>{dictionary.footer.collaborate}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--border-soft);
+    margin-top: 3rem;
+    background: rgba(15, 17, 21, 0.65);
+  }
+
+  .shell {
+    width: min(var(--content-width), 92vw);
+    margin: 0 auto;
+    padding: 1.8rem 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .links a:hover {
+    color: var(--accent-primary);
+  }
+</style>

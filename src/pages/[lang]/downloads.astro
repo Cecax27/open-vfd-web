@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/shared/SectionHeading.astro';
+import ReleaseCard from '../../components/downloads/ReleaseCard.astro';
+import DiscordBanner from '../../components/shared/DiscordBanner.astro';
+import IconGithub from '../../components/icons/IconGithub.astro';
+import { getDictionary, isLocale, locales, type Locale } from '../../locales';
+
+interface ReleaseAsset {
+  name: string;
+  size: number;
+  browser_download_url: string;
+}
+
+interface GitHubRelease {
+  tag_name: string;
+  name: string;
+  published_at: string;
+  body: string;
+  draft: boolean;
+  prerelease: boolean;
+  assets: ReleaseAsset[];
+}
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+
+if (!lang || !isLocale(lang)) {
+  return Astro.redirect('/en/downloads');
+}
+
+const locale: Locale = lang;
+const dictionary = getDictionary(locale);
+const releasesApiUrl = 'https://api.github.com/repos/Cecax27/open-vfd-simulator/releases';
+
+const getReleases = async (): Promise<GitHubRelease[]> => {
+  try {
+    const response = await fetch(releasesApiUrl, {
+      headers: {
+        Accept: 'application/vnd.github+json'
+      }
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = (await response.json()) as GitHubRelease[];
+    return data.filter((release) => !release.draft);
+  } catch {
+    return [];
+  }
+};
+
+const releases = await getReleases();
+---
+
+<BaseLayout title={dictionary.downloads.title} description={dictionary.downloads.description} locale={locale}>
+  <section class="page-grid">
+    <SectionHeading
+      kicker={dictionary.downloads.kicker}
+      title={dictionary.downloads.heading}
+      description={dictionary.downloads.summary}
+    />
+
+    <div class="actions">
+      <a class="button button-secondary" href="https://github.com/Cecax27/open-vfd-simulator/releases" target="_blank" rel="noreferrer">
+        <IconGithub />
+        {dictionary.downloads.viewOnGithub}
+      </a>
+    </div>
+
+    {releases.length > 0 ? (
+      <div class="list">
+        {releases.map((release) => (
+          <ReleaseCard
+            tag={release.tag_name}
+            name={release.name}
+            publishedAt={release.published_at}
+            body={release.body}
+            assets={release.assets}
+            locale={locale === 'es' ? 'es-ES' : 'en-US'}
+            showReleaseNotesText={dictionary.downloads.showReleaseNotes}
+            noReleaseNotesText={dictionary.downloads.noReleaseNotes}
+            noAssetsText={dictionary.downloads.noAssets}
+          />
+        ))}
+      </div>
+    ) : (
+      <article class="surface empty">
+        <h3>{dictionary.downloads.emptyTitle}</h3>
+        <p class="muted">{dictionary.downloads.emptyDescription}</p>
+      </article>
+    )}
+  </section>
+
+  <DiscordBanner
+    kicker={dictionary.discordBanner.kicker}
+    title={dictionary.discordBanner.title}
+    buttonLabel={dictionary.discordBanner.button}
+  />
+</BaseLayout>
+
+<style>
+  .actions {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .list {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .empty {
+    padding: 1.2rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+</style>

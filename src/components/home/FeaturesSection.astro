@@ -1,0 +1,48 @@
+---
+import SectionHeading from '../shared/SectionHeading.astro';
+import FeatureCard from './FeatureCard.astro';
+
+interface FeatureItem {
+  token: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  description: string;
+  items: FeatureItem[];
+}
+
+const { kicker, title, description, items } = Astro.props;
+---
+
+<section class="section-space page-grid">
+  <SectionHeading kicker={kicker} title={title} description={description} />
+  <div class="grid">
+    {items.map((feature) => (
+      <FeatureCard {...feature} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: 1050px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
