@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  label: string;
+  badge?: string;
+}
+
+const { title, description, href, label, badge } = Astro.props;
+---
+
+<article class="surface card">
+  <div class="head">
+    <h3>{title}</h3>
+    {badge && <span class="badge mono">{badge}</span>}
+  </div>
+  <p>{description}</p>
+  <a class="button button-secondary" href={href} target="_blank" rel="noreferrer">{label}</a>
+</article>
+
+<style>
+  .card {
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    color: var(--accent-primary);
+    border: 1px solid rgba(0, 209, 178, 0.4);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+
+  .button {
+    justify-self: start;
+  }
+</style>

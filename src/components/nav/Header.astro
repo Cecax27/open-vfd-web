@@ -1,0 +1,80 @@
+---
+import NavLink from './NavLink.astro';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/downloads', label: 'Downloads' },
+  { href: '/docs', label: 'Documentation' },
+  { href: '/collaborate', label: 'Collaborate' }
+];
+---
+
+<header>
+  <div class="shell">
+    <a class="brand" href="/">OpenVFD</a>
+    <nav>
+      {navItems.map((item) => (
+        <NavLink href={item.href} label={item.label} currentPath={currentPath} />
+      ))}
+    </nav>
+    <a class="button button-primary" href="https://discord.gg/RScK4jEC7" target="_blank" rel="noreferrer">
+      Join Discord
+    </a>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    background: rgba(15, 17, 21, 0.82);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .shell {
+    width: min(var(--content-width), 92vw);
+    margin: 0 auto;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .button {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .shell {
+      grid-template-columns: 1fr;
+      justify-items: start;
+      gap: 0.8rem;
+    }
+
+    nav {
+      justify-content: flex-start;
+    }
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+import DownloadAsset from './DownloadAsset.astro';
+
+interface ReleaseAsset {
+  name: string;
+  size: number;
+  browser_download_url: string;
+}
+
+interface Props {
+  tag: string;
+  name: string;
+  publishedAt: string;
+  body: string;
+  assets: ReleaseAsset[];
+}
+
+const { tag, name, publishedAt, body, assets } = Astro.props;
+
+const publishedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit'
+}).format(new Date(publishedAt));
+---
+
+<article class="surface release">
+  <div class="head">
+    <h3>{name || tag}</h3>
+    <p class="meta mono">{tag} • {publishedDate}</p>
+  </div>
+
+  <p class="notes">{body?.trim() || 'No release notes available for this version yet.'}</p>
+
+  {assets.length > 0 ? (
+    <div class="assets">
+      {assets.map((asset) => (
+        <DownloadAsset name={asset.name} size={asset.size} downloadUrl={asset.browser_download_url} />
+      ))}
+    </div>
+  ) : (
+    <p class="muted">No downloadable assets were attached to this release.</p>
+  )}
+</article>
+
+<style>
+  .release {
+    padding: 1.4rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .head {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  h3 {
+    font-size: 1.12rem;
+  }
+
+  .meta {
+    color: var(--secondary);
+    font-size: 0.78rem;
+  }
+
+  .notes {
+    color: var(--text-secondary);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+
+  .assets {
+    display: grid;
+    gap: 0.55rem;
+  }
+</style>

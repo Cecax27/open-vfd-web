@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/shared/SectionHeading.astro';
+import ContributeCard from '../components/collaborate/ContributeCard.astro';
+import DiscordBanner from '../components/shared/DiscordBanner.astro';
+
+const cards = [
+  {
+    title: 'Contribute on GitHub',
+    description: 'Open issues, propose features, and submit pull requests to improve simulation quality and protocol support.',
+    href: 'https://github.com/Cecax27/open-vfd-simulator',
+    label: 'Open Repository'
+  },
+  {
+    title: 'Join the Community',
+    description: 'Discuss PLC workflows, share integrations, and ask implementation questions in the OpenVFD Discord.',
+    href: 'https://discord.gg/RScK4jEC7',
+    label: 'Join Discord'
+  },
+  {
+    title: 'GitHub Sponsors',
+    description: 'Support development through GitHub Sponsors. The profile is reserved and will be activated soon.',
+    href: 'https://github.com/sponsors/Cecax27',
+    label: 'View Sponsors Page',
+    badge: 'Coming Soon'
+  }
+];
+---
+
+<BaseLayout title="Collaborate | OpenVFD" description="Contribute to OpenVFD through GitHub, Discord, and GitHub Sponsors.">
+  <section class="page-grid">
+    <SectionHeading
+      kicker="Get Involved"
+      title="Build OpenVFD with the community"
+      description="OpenVFD grows with your feedback, test scenarios, and contributions from control engineers and developers."
+    />
+
+    <div class="grid">
+      {cards.map((card) => (
+        <ContributeCard {...card} />
+      ))}
+    </div>
+  </section>
+
+  <DiscordBanner />
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  @media (max-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

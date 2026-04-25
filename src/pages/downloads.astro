@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/shared/SectionHeading.astro';
+import ReleaseCard from '../components/downloads/ReleaseCard.astro';
+import DiscordBanner from '../components/shared/DiscordBanner.astro';
+
+interface ReleaseAsset {
+  name: string;
+  size: number;
+  browser_download_url: string;
+}
+
+interface GitHubRelease {
+  tag_name: string;
+  name: string;
+  published_at: string;
+  body: string;
+  draft: boolean;
+  prerelease: boolean;
+  assets: ReleaseAsset[];
+}
+
+const releasesApiUrl = 'https://api.github.com/repos/Cecax27/open-vfd-simulator/releases';
+
+const getReleases = async (): Promise<GitHubRelease[]> => {
+  try {
+    const response = await fetch(releasesApiUrl, {
+      headers: {
+        Accept: 'application/vnd.github+json'
+      }
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const data = (await response.json()) as GitHubRelease[];
+    return data.filter((release) => !release.draft);
+  } catch {
+    return [];
+  }
+};
+
+const releases = await getReleases();
+---
+
+<BaseLayout title="Downloads | OpenVFD" description="Download OpenVFD releases from the official GitHub release feed.">
+  <section class="page-grid">
+    <SectionHeading
+      kicker="Official Builds"
+      title="Download OpenVFD releases"
+      description="Releases are pulled from the open-vfd-simulator GitHub repository at build time."
+    />
+
+    <div class="actions">
+      <a class="button button-secondary" href="https://github.com/Cecax27/open-vfd-simulator/releases" target="_blank" rel="noreferrer">
+        View on GitHub
+      </a>
+    </div>
+
+    {releases.length > 0 ? (
+      <div class="list">
+        {releases.map((release) => (
+          <ReleaseCard
+            tag={release.tag_name}
+            name={release.name}
+            publishedAt={release.published_at}
+            body={release.body}
+            assets={release.assets}
+          />
+        ))}
+      </div>
+    ) : (
+      <article class="surface empty">
+        <h3>No releases available right now.</h3>
+        <p class="muted">
+          GitHub did not return releases during build. Check the repository releases page for the latest artifacts.
+        </p>
+      </article>
+    )}
+  </section>
+
+  <DiscordBanner />
+</BaseLayout>
+
+<style>
+  .actions {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .list {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .empty {
+    padding: 1.2rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+</style>

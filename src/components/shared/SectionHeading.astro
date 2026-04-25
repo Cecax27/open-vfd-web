@@ -1,0 +1,39 @@
+---
+interface Props {
+  kicker?: string;
+  title: string;
+  description: string;
+}
+
+const { kicker, title, description } = Astro.props;
+---
+
+<div class="heading">
+  {kicker && <p class="kicker mono">{kicker}</p>}
+  <h2>{title}</h2>
+  <p>{description}</p>
+</div>
+
+<style>
+  .heading {
+    display: grid;
+    gap: 0.55rem;
+    max-width: 760px;
+  }
+
+  .kicker {
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+    line-height: 1.1;
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+</style>
